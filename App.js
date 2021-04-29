@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -12,6 +12,7 @@ import {
   Filter,
   Message,
 } from './components/screen';
+import auth from '@react-native-firebase/auth';
 
 const AuthStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
@@ -42,16 +43,29 @@ const UserStackScreen = () => (
   </UserStack.Navigator>
 );
 
-export default () => {
-  return (
-    <NavigationContainer>
-      {/*   <Tabs.Navigator>
-         <Tabs.Screen name="Home" component={HomeStackScreen} />
-         <Tabs.Screen name="Search" component={SearchStackScreen} />
-        <Tabs.Screen name="User" component={UserStackScreen} />
-       </Tabs.Navigator> */}
 
-      <AuthStack.Navigator>
+
+export default () => {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+  if (!user) {
+    return (
+      <NavigationContainer>
+        <AuthStack.Navigator>
         <AuthStack.Screen
           name="SignIn"
           component={SignIn}
@@ -63,6 +77,31 @@ export default () => {
           options={{title: 'Créer un compte'}}
         />
       </AuthStack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  return (
+    <NavigationContainer>
+        <Tabs.Navigator>
+         <Tabs.Screen name="Home" component={HomeStackScreen} />
+         <Tabs.Screen name="Search" component={SearchStackScreen} />
+        <Tabs.Screen name="User" component={UserStackScreen} />
+       </Tabs.Navigator>
+
+      {/* <AuthStack.Navigator>
+        <AuthStack.Screen
+          name="SignIn"
+          component={SignIn}
+          options={{title: 'Se connecter'}}
+        />
+        <AuthStack.Screen
+          name="CreateAccount"
+          component={CreateAccount}
+          options={{title: 'Créer un compte'}}
+        />
+      </AuthStack.Navigator> */}
     </NavigationContainer>
   );
 };
+
+

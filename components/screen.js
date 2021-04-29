@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, Button, TextInput} from 'react-native';
 import Auth from './signIn';
 import Log from './log';
+import auth from '@react-native-firebase/auth';
 const ScreenContainer = ({children}) => <View>{children}</View>;
 
 export const SignIn = ({navigation}) => {
@@ -20,15 +21,20 @@ export const SignIn = ({navigation}) => {
 export const CreateAccount = () => {
   return (
     <ScreenContainer>
-      <Log/>
+      <Log />
     </ScreenContainer>
   );
 };
 
+const SignOut = () =>
+  auth()
+    .signOut()
+    .then(() => console.log('User signed out!'));
 export const Home = () => {
   return (
     <ScreenContainer>
       <Text>Home</Text>
+      <Button title="disconect" onPress={() => SignOut()} />
     </ScreenContainer>
   );
 };
