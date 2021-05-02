@@ -1,12 +1,25 @@
 import React from 'react';
-import {TextInput, View} from 'react-native';
+import {TextInput, View, Button} from 'react-native';
+import auth from '@react-native-firebase/auth'
+const logIn=(email,mdp)=>(
+  auth()
+ .signInWithEmailAndPassword(email, mdp)
+ .then(() => {
+   console.log('Login!');
+ })
+ .catch(error => {
+   if (error.code === 'auth/invalid-email') {
+     console.log('That email address is invalid!');
+   }
+   console.error(error);
+ })
+);
 export default class Auth extends React.Component {
-  
   constructor(props) {
     super(props);
     this.state = {
       email: 'admin@admin.com',
-      mdp: 'admin',
+      mdp: 'admin1',
     };
   }
   setEmail(email) {
@@ -32,6 +45,7 @@ export default class Auth extends React.Component {
           underlineColorAndroid="transparent"
           value={this.state.mdp}
         />
+        <Button title="S'identifier" onPress={() => logIn(this.state.email,this.state.mdp)} />
       </View>
     );
   }

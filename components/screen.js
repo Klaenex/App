@@ -9,7 +9,6 @@ export const SignIn = ({navigation}) => {
   return (
     <ScreenContainer>
       <Auth />
-      <Button title="S'identifier" onPress={() => alert('todo')} />
       <Button
         title="Créer un compte"
         onPress={() => navigation.push('CreateAccount')}
@@ -30,6 +29,7 @@ const SignOut = () =>
   auth()
     .signOut()
     .then(() => console.log('User signed out!'));
+
 export const Home = () => {
   return (
     <ScreenContainer>

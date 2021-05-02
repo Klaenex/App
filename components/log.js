@@ -1,32 +1,51 @@
 import React, {useState, useEffect} from 'react';
-import {View, TextInput, Button} from 'react-native';
+import {View, TextInput, Button, Modal, Text} from 'react-native';
+import {UserInfoModal} from './modal';
 import auth from '@react-native-firebase/auth';
-const login=(email,mdp)=>(
+import firestore from '@react-native-firebase/firestore';
+
+//const usersCollection = firestore().collection('users');
+
+const addUsers = (email) => {
+  firestore()
+  .collection('users')
+  .add({
+    pseudo: '',
+    email: email,
+    desc:'',
+    instrument:[],
+    style:[],
+    band:false
+  })
+  .then(() => {
+    console.log('User added!');
+  });
+};
+const createAccount = (email, mdp) =>
   auth()
- .createUserWithEmailAndPassword(email, mdp)
- .then(() => {
-   console.log('User account created & signed in!');
- })
- .catch(error => {
-   if (error.code === 'auth/email-already-in-use') {
-     console.log('That email address is already in use!');
-   }
+    .createUserWithEmailAndPassword(email, mdp)
+    .then(() => {
+      addUsers(email);
+    })
 
-   if (error.code === 'auth/invalid-email') {
-     console.log('That email address is invalid!');
-   }
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+      }
 
-   console.error(error);
- })
-);
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      }
+      console.error(error);
+    });
+
 export default class Log extends React.Component {
   
-  
   constructor(props) {
-    super(props);
+    super(props);   
     this.state = {
       email: 'admin@admin.com',
-      mdp: 'admin',
+      mdp: 'admin1',
     };
   }
   setEmail(email) {
@@ -34,7 +53,7 @@ export default class Log extends React.Component {
   }
   setMdp(mdp) {
     this.setState({mdp});
-  }  
+  }
   render() {
     return (
       <View>
@@ -52,7 +71,10 @@ export default class Log extends React.Component {
           underlineColorAndroid="transparent"
           value={this.state.mdp}
         />
-        <Button title="Crée un compte" onPress={()=>login(this.state.email,this.state.mdp)} />
+        <Button
+          title="Crée un compte"
+          onPress={() => createAccount(this.state.email, this.state.mdp)}
+        />
       </View>
     );
   }
