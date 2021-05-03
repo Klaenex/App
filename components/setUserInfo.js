@@ -3,7 +3,7 @@ import {Text, TextInput, Pressable, View, Button} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import ImagePicker from './imagePicker';
-import {InstList} from './list';
+import {InstList,StyleList} from './list';
 
 export default class SetUserInfo extends React.Component {
   constructor(props) {
@@ -39,6 +39,7 @@ export default class SetUserInfo extends React.Component {
           onChangeText={text => this.setDesc(text)}
         />
          <InstList/>
+         <StyleList/>
       </View>
     );
   }

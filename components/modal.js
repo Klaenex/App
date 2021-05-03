@@ -8,7 +8,7 @@ import {
   Button,
   Alert,
 } from 'react-native';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import SelectMultiple from 'react-native-select-multiple';
 import SetUserInfo from './setUserInfo';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -45,19 +45,18 @@ export class UserInfoModal extends React.Component {
   }
 }
 
-export class InstModalCheck extends React.Component {
-  state = {
-    modalVisible: false,
-    inst: {
-      inst: [],
-    },
-  };
 
-  setModalVisible = visible => {
-    this.setState({modalVisible: visible});
-  };
+
+export class InstModalCheck extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      modalVisible: false,
+      selectedItems: [],
+      inst: {
+        inst: [],
+      },
+    };
     this.getInst();
     this.instrument = firestore()
       .collection('list')
@@ -70,12 +69,25 @@ export class InstModalCheck extends React.Component {
         });
       });
   }
+
+
+  setModalVisible = visible => {
+    this.setState({modalVisible: visible});
+  };
+  onSelectionsChange = selectedItems => {
+    // selecteditem is array of { label, value }
+    this.setState({selectedItems});
+    console.log(selectedItems);
+  };
   getInst = async () => {
     const listDoc = await firestore().collection('list').doc('inst').get();
     console.log(listDoc.data().inst);
   };
+
   render() {
     const {modalVisible} = this.state;
+
+    const list = this.state.inst.inst;
     return (
       <View>
         <Pressable
@@ -83,7 +95,9 @@ export class InstModalCheck extends React.Component {
           onPress={() => this.setModalVisible(true)}>
           <Text style={{margin: 8, color: 'white'}}>Ajoute un instrument</Text>
         </Pressable>
+
         <Modal
+          animationType="fade"
           transparent={false}
           visible={modalVisible}
           onRequestClose={() => {
@@ -93,20 +107,115 @@ export class InstModalCheck extends React.Component {
             title="close"
             onPress={() => this.setModalVisible(!modalVisible)}
           />
-          {this.state.inst.inst.map((name, index) => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-              key={index}>
-              <Text>{name}</Text>
-              
-            </View>
-          ))}
+          <View>
+            <SelectMultiple
+              items={list}
+              selectedItems={this.state.selectedItems}
+              onSelectionsChange={this.onSelectionsChange}></SelectMultiple>
+          </View>
         </Modal>
+         
+
+          {this.state.selectedItems.map((inst, index) => (
+          <Pressable
+            key={index}
+            onPress={() => {
+              this.state.selectedItems.splice(index, 1);
+             this.setState(this.state.selectedItems)
+              console.log(this.state.selectedItems);
+              
+            }}>
+            <Text>{inst.label}</Text>
+          </Pressable>
+        ))}  
+      </View>
+    );
+  }
+}
+
+
+
+export class StyleModalCheck extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+      selectedItems: [],
+      style: {
+        style: [],
+      },
+    };
+    this.getStyle();
+    this.style = firestore()
+      .collection('list')
+      .doc('style')
+      .onSnapshot(doc => {
+        this.setState({
+          style: {
+            style: doc.data().style,
+          },
+        });
+      });
+  }
+
+
+  setModalVisible = visible => {
+    this.setState({modalVisible: visible});
+  };
+  onSelectionsChange = selectedItems => {
+    // selecteditem is array of { label, value }
+    this.setState({selectedItems});
+    console.log(selectedItems);
+  };
+  getStyle = async () => {
+    const listDoc = await firestore().collection('list').doc('style').get();
+    console.log(listDoc.data().style);
+  };
+
+  render() {
+    const {modalVisible} = this.state;
+
+    const list = this.state.style.style;
+    return (
+      <View>
+        <Pressable
+          style={{margin: 15, backgroundColor: 'blue'}}
+          onPress={() => this.setModalVisible(true)}>
+          <Text style={{margin: 8, color: 'white'}}>Ajoute un style</Text>
+        </Pressable>
+
+        <Modal
+          animationType="fade"
+          transparent={false}
+          visible={modalVisible}
+          onRequestClose={() => {
+            this.setModalVisible(!modalVisible);
+          }}>
+          <Button
+            title="close"
+            onPress={() => this.setModalVisible(!modalVisible)}
+          />
+          <View>
+            <SelectMultiple
+              items={list}
+              selectedItems={this.state.selectedItems}
+              onSelectionsChange={this.onSelectionsChange}></SelectMultiple>
+          </View>
+        </Modal>
+         
+
+          {this.state.selectedItems.map((style, index) => (
+          <Pressable
+            key={index}
+            onPress={() => {
+              this.state.selectedItems.splice(index, 1);
+             this.setState(this.state.selectedItems)
+              console.log(this.state.selectedItems);
+              
+            }}>
+            <Text>{style.label}</Text>
+          </Pressable>
+        ))}  
       </View>
     );
   }
