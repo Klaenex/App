@@ -1,10 +1,11 @@
 import React from 'react'
-import {Text, TextInput, Pressable, View, Button} from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {Text, TextInput, Pressable, View, Button,Image} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 
+
 export default function ImagePicker(){
-    const [response, setResponse] = React.useState(null);
+  const [response, setResponse] = React.useState(null);
 
   return (
     <View>
@@ -12,7 +13,8 @@ export default function ImagePicker(){
         <Text>Ajoute une photo de profil</Text>
         <Button
           title="Ajoute une photo"
-          onPress={() =>
+          onPress={() =>{
+
             launchImageLibrary(
               {
                 mediaType: 'photo',
@@ -21,9 +23,12 @@ export default function ImagePicker(){
                 maxWidth: 400,
               },
               response => {
-                setResponse(response);
-              },
+                setResponse(response.uri);
+              }
             )
+            
+            console.log(response)
+          }
           }
         />
       </Pressable>

@@ -7,17 +7,83 @@ import {
   Pressable,
   Button,
   Alert,
+  Image,
 } from 'react-native';
 import SelectMultiple from 'react-native-select-multiple';
-import SetUserInfo from './setUserInfo';
+//import ImagePicker from './imagePicker';
+
+import{launchImageLibrary} from 'react-native-image-picker'
+import {InstList, StyleList} from './list';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {InstList} from './list';
+
+//FONCTION UPDATE DE LA PREMMIERE CONNECTION
+
+//const uid = auth().currentUser.uid;
+
+const firstUpdate = (pseudo, desc, inst, style, uid) => {
+  firestore()
+    .collection('users')
+    .doc(uid)
+    .update({
+      pseudo: pseudo,
+      desc: desc,
+      style: style,
+      inst: inst,
+    })
+    .then(() => {
+      auth().currentUser.updateProfile({displayName: pseudo});
+      console.log(auth().currentUser.displayName)
+      console.log(uid);
+    });
+};
+function ImagePicker() {
+  const [response, setResponse] = React.useState(null);
+  return (
+    <View>
+      <Pressable>
+        <Text>Ajoute une photo de profil</Text>
+        {/* <Image source={response} /> */}
+        <Button
+          title="Ajoute une photo"
+          onPress={() => {
+            launchImageLibrary(
+              {
+                mediaType: 'photo',
+                includeBase64: false,
+                maxHeight: 400,
+                maxWidth: 400,
+              },
+              response => {
+                setResponse(response.uri);
+              },
+            );
+            console.log(response);
+          }}
+        />
+      </Pressable>
+    </View>
+  );
+}
 
 export class UserInfoModal extends React.Component {
-  state = {
-    modalVisible: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      desc: '',
+      inst: [],
+      style: [],
+      modalVisible: true,
+    };
+  }
+  setName(name) {
+    this.setState({name});
+  }
+  setDesc(desc) {
+    this.setState({desc});
+  }
+
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
@@ -31,21 +97,51 @@ export class UserInfoModal extends React.Component {
           transparent={false}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
             this.setModalVisible(!modalVisible);
           }}>
-          <SetUserInfo />
+          <Text>
+            Ton compte est maintenant créer, Tu peux maintenant completer tes
+            information
+          </Text>
+          <Text>Photo de profil</Text>
+           <ImagePicker /> 
+
+          <Text>Nom d'utilisateur</Text>
+          <TextInput onChangeText={text => this.setName(text)} />
+          <Text>A propos de toi</Text>
+          <TextInput
+            placeholder="Décris toi briévement"
+            multiline={true}
+            onChangeText={text => this.setDesc(text)}
+          />
+          <InstModalCheck />
+
+          <StyleModalCheck />
           <Button
-            title="close"
-            onPress={() => this.setModalVisible(!modalVisible)}
+          title='test'
+          onPress={() => console.log(auth().currentUser.uid)}
+          />
+          <Button
+            title="C'est partit!"
+            onPress={() => {
+              const uID = auth().currentUser.uid
+               firstUpdate(
+                 this.state.name,
+                this.state.desc,
+                this.state.inst,
+                this.state.style,
+                uID,
+              );
+              this.setModalVisible(!modalVisible);
+            }}
           />
         </Modal>
       );
+    } else {
+      return <View></View>;
     }
   }
 }
-
-
 
 export class InstModalCheck extends React.Component {
   constructor(props) {
@@ -70,18 +166,15 @@ export class InstModalCheck extends React.Component {
       });
   }
 
-
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
   onSelectionsChange = selectedItems => {
     // selecteditem is array of { label, value }
     this.setState({selectedItems});
-    console.log(selectedItems);
   };
   getInst = async () => {
     const listDoc = await firestore().collection('list').doc('inst').get();
-    console.log(listDoc.data().inst);
   };
 
   render() {
@@ -111,29 +204,25 @@ export class InstModalCheck extends React.Component {
             <SelectMultiple
               items={list}
               selectedItems={this.state.selectedItems}
-              onSelectionsChange={this.onSelectionsChange}></SelectMultiple>
+              onSelectionsChange={this.onSelectionsChange}
+            />
           </View>
         </Modal>
-         
 
-          {this.state.selectedItems.map((inst, index) => (
+        {this.state.selectedItems.map((inst, index) => (
           <Pressable
             key={index}
             onPress={() => {
               this.state.selectedItems.splice(index, 1);
-             this.setState(this.state.selectedItems)
-              console.log(this.state.selectedItems);
-              
+              this.setState(this.state.selectedItems);
             }}>
             <Text>{inst.label}</Text>
           </Pressable>
-        ))}  
+        ))}
       </View>
     );
   }
 }
-
-
 
 export class StyleModalCheck extends React.Component {
   constructor(props) {
@@ -158,18 +247,15 @@ export class StyleModalCheck extends React.Component {
       });
   }
 
-
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
   onSelectionsChange = selectedItems => {
     // selecteditem is array of { label, value }
     this.setState({selectedItems});
-    console.log(selectedItems);
   };
   getStyle = async () => {
     const listDoc = await firestore().collection('list').doc('style').get();
-    console.log(listDoc.data().style);
   };
 
   render() {
@@ -202,20 +288,16 @@ export class StyleModalCheck extends React.Component {
               onSelectionsChange={this.onSelectionsChange}></SelectMultiple>
           </View>
         </Modal>
-         
-
-          {this.state.selectedItems.map((style, index) => (
+        {this.state.selectedItems.map((style, index) => (
           <Pressable
             key={index}
             onPress={() => {
               this.state.selectedItems.splice(index, 1);
-             this.setState(this.state.selectedItems)
-              console.log(this.state.selectedItems);
-              
+              this.setState(this.state.selectedItems);
             }}>
             <Text>{style.label}</Text>
           </Pressable>
-        ))}  
+        ))}
       </View>
     );
   }

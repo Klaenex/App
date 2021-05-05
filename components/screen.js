@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, Button, TextInput} from 'react-native';
 import Auth from './signIn';
 import Log from './log';
+import UserProfile from './userProfile'
 import auth from '@react-native-firebase/auth';
 const ScreenContainer = ({children}) => <View>{children}</View>;
 
@@ -53,7 +54,7 @@ export const Search = ({navigation}) => {
 export const User = () => {
   return (
     <ScreenContainer>
-      <Text>User</Text>
+      <UserProfile />
     </ScreenContainer>
   );
 };

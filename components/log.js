@@ -6,14 +6,16 @@ import firestore from '@react-native-firebase/firestore';
 
 //const usersCollection = firestore().collection('users');
 
-const addUsers = (email) => {
+const addUsers = (email,uid) => {
   firestore()
   .collection('users')
-  .add({
+  .doc(uid)
+  .set({
+    id:uid,
     pseudo: '',
     email: email,
     desc:'',
-    instrument:[],
+    inst:[],
     style:[],
     band:false
   })
@@ -21,11 +23,15 @@ const addUsers = (email) => {
     console.log('User added!');
   });
 };
+
+
 const createAccount = (email, mdp) =>
   auth()
     .createUserWithEmailAndPassword(email, mdp)
     .then(() => {
-      addUsers(email);
+      let uId=auth().currentUser.uid
+      console.log(uId)
+      addUsers(email,uId);
     })
 
     .catch(error => {
