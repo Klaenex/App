@@ -29,6 +29,7 @@ const createAccount = (email, mdp) =>
   auth()
     .createUserWithEmailAndPassword(email, mdp)
     .then(() => {
+     
       let uId=auth().currentUser.uid
       console.log(uId)
       addUsers(email,uId);

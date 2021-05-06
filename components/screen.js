@@ -3,6 +3,7 @@ import {View, Text, Button, TextInput} from 'react-native';
 import Auth from './signIn';
 import Log from './log';
 import UserProfile from './userProfile'
+import SearchUsers from './searchUsers.js'
 import auth from '@react-native-firebase/auth';
 const ScreenContainer = ({children}) => <View>{children}</View>;
 
@@ -42,11 +43,11 @@ export const Home = () => {
 export const Search = ({navigation}) => {
   return (
     <ScreenContainer>
-      <Text>Search</Text>
-      <Button
+      <SearchUsers/>
+      {/* <Button
         title="Message"
         onPress={() => navigation.push('Message', {name: 'Message'})}
-      />
+      /> */}
     </ScreenContainer>
   );
 };

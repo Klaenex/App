@@ -12,7 +12,7 @@ import {
 import SelectMultiple from 'react-native-select-multiple';
 //import ImagePicker from './imagePicker';
 
-import{launchImageLibrary} from 'react-native-image-picker'
+import {launchImageLibrary} from 'react-native-image-picker';
 import {InstList, StyleList} from './list';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -33,7 +33,7 @@ const firstUpdate = (pseudo, desc, inst, style, uid) => {
     })
     .then(() => {
       auth().currentUser.updateProfile({displayName: pseudo});
-      console.log(auth().currentUser.displayName)
+      console.log(auth().currentUser.displayName);
       console.log(uid);
     });
 };
@@ -43,7 +43,7 @@ function ImagePicker() {
     <View>
       <Pressable>
         <Text>Ajoute une photo de profil</Text>
-        {/* <Image source={response} /> */}
+         {/* <Image source={response} />  */}
         <Button
           title="Ajoute une photo"
           onPress={() => {
@@ -104,7 +104,7 @@ export class UserInfoModal extends React.Component {
             information
           </Text>
           <Text>Photo de profil</Text>
-           <ImagePicker /> 
+          <ImagePicker />
 
           <Text>Nom d'utilisateur</Text>
           <TextInput onChangeText={text => this.setName(text)} />
@@ -115,18 +115,13 @@ export class UserInfoModal extends React.Component {
             onChangeText={text => this.setDesc(text)}
           />
           <InstModalCheck />
-
           <StyleModalCheck />
-          <Button
-          title='test'
-          onPress={() => console.log(auth().currentUser.uid)}
-          />
           <Button
             title="C'est partit!"
             onPress={() => {
-              const uID = auth().currentUser.uid
-               firstUpdate(
-                 this.state.name,
+              const uID = auth().currentUser.uid;
+              firstUpdate(
+                this.state.name,
                 this.state.desc,
                 this.state.inst,
                 this.state.style,

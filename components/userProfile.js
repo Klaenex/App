@@ -35,10 +35,10 @@ export default class UserProfile extends React.Component {
   render() {
     return (
       <View>
-        <Text>{this.state.text.pseudo}</Text>
+        <Text>{this.state.text.pseudo}</Text> 
         <Image />
         <Text>Description</Text>
-        <Text>{this.state.text.desc}</Text>
+         <Text>{this.state.text.desc}</Text> 
         <Button
           title="test"
           onPress={async () => {
