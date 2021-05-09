@@ -8,14 +8,18 @@ import {
   Button,
   Alert,
   Image,
+  StyleSheet,
 } from 'react-native';
 import SelectMultiple from 'react-native-select-multiple';
+
 //import ImagePicker from './imagePicker';
 
 import {launchImageLibrary} from 'react-native-image-picker';
-import {InstList, StyleList} from './list';
+import styles from '../styles/style';
+import fonts from '../styles/font';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import style from '../styles/style';
 
 //FONCTION UPDATE DE LA PREMMIERE CONNECTION
 
@@ -37,34 +41,34 @@ const firstUpdate = (pseudo, desc, inst, style, uid) => {
       console.log(uid);
     });
 };
-function ImagePicker() {
-  const [response, setResponse] = React.useState(null);
-  return (
-    <View>
-      <Pressable>
-        <Text>Ajoute une photo de profil</Text>
-         {/* <Image source={response} />  */}
-        <Button
-          title="Ajoute une photo"
-          onPress={() => {
-            launchImageLibrary(
-              {
-                mediaType: 'photo',
-                includeBase64: false,
-                maxHeight: 400,
-                maxWidth: 400,
-              },
-              response => {
-                setResponse(response.uri);
-              },
-            );
-            console.log(response);
-          }}
-        />
-      </Pressable>
-    </View>
-  );
-}
+// function ImagePicker() {
+//   const [response, setResponse] = React.useState(null);
+//   return (
+//     <View>
+//       <Pressable>
+//         <Text>Ajoute une photo de profil</Text>
+//          <Image source={{require(response)}} />
+//         <Button
+//           title="Ajoute une photo"
+//           onPress={() => {
+//             launchImageLibrary(
+//               {
+//                 mediaType: 'photo',
+//                 includeBase64: false,
+//                 maxHeight: 400,
+//                 maxWidth: 400,
+//               },
+//               response => {
+//                 setResponse(response.uri);
+//               },
+//             );
+//             console.log(response);
+//           }}
+//         />
+//       </Pressable>
+//     </View>
+//   );
+// }
 
 export class UserInfoModal extends React.Component {
   constructor(props) {
@@ -77,23 +81,31 @@ export class UserInfoModal extends React.Component {
       modalVisible: true,
     };
   }
+
   setName(name) {
     this.setState({name});
   }
   setDesc(desc) {
     this.setState({desc});
   }
-
+  // setInst(inst) {
+  //   this.setState({inst});
+  // }
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
-
+  childStateCallback = (childState) => {
+    this.setState({
+      inst: childState,
+    });
+  };
   render() {
     const {modalVisible} = this.state;
     const currentUser = auth().currentUser;
     if (currentUser.displayName == null) {
       return (
         <Modal
+          styles={{padding: 16}}
           transparent={false}
           visible={modalVisible}
           onRequestClose={() => {
@@ -104,7 +116,7 @@ export class UserInfoModal extends React.Component {
             information
           </Text>
           <Text>Photo de profil</Text>
-          <ImagePicker />
+          {/* <ImagePicker /> */}
 
           <Text>Nom d'utilisateur</Text>
           <TextInput onChangeText={text => this.setName(text)} />
@@ -112,22 +124,25 @@ export class UserInfoModal extends React.Component {
           <TextInput
             placeholder="Décris toi briévement"
             multiline={true}
-            onChangeText={text => this.setDesc(text)}
+           onChangeText={text => this.setDesc(text)}
           />
-          <InstModalCheck />
+          <InstModalCheck
+            toCallBack={(childState) => this.childStateCallback(childState)}
+          />
           <StyleModalCheck />
           <Button
             title="C'est partit!"
             onPress={() => {
-              const uID = auth().currentUser.uid;
-              firstUpdate(
-                this.state.name,
-                this.state.desc,
-                this.state.inst,
-                this.state.style,
-                uID,
-              );
-              this.setModalVisible(!modalVisible);
+              console.log(this.state.inst)
+              // const uID = auth().currentUser.uid;
+              // firstUpdate(
+              //   this.state.name,
+              //   this.state.desc,
+              //   this.state.inst,
+              //   this.state.style,
+              //   uID,
+              // );
+              // this.setModalVisible(!modalVisible);
             }}
           />
         </Modal>
@@ -143,7 +158,7 @@ export class InstModalCheck extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
-      selectedItems: [],
+      selectedInst: [],
       inst: {
         inst: [],
       },
@@ -160,14 +175,24 @@ export class InstModalCheck extends React.Component {
         });
       });
   }
-
+  setStateAndRunCallback = (val) => {
+    this.setState(val, () => {
+      this.props.toCallBack(this.state);
+    });
+  };
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
-  onSelectionsChange = selectedItems => {
-    // selecteditem is array of { label, value }
-    this.setState({selectedItems});
-  };
+
+    onSelectionsChange = selectedInst => {
+  // //   // selecteditem is array of { label, value }
+  this.setState({selectedInst})
+     this.setState((selectedInst) =>{
+        this.props.toCallBack(this.state.selectedInst);
+      });
+     
+    };
+  
   getInst = async () => {
     const listDoc = await firestore().collection('list').doc('inst').get();
   };
@@ -179,9 +204,10 @@ export class InstModalCheck extends React.Component {
     return (
       <View>
         <Pressable
-          style={{margin: 15, backgroundColor: 'blue'}}
+          style={styles.button}
           onPress={() => this.setModalVisible(true)}>
-          <Text style={{margin: 8, color: 'white'}}>Ajoute un instrument</Text>
+          <Text style={fonts.textButton}>Ajoute un instrument</Text>
+          <Image source={require('../assets/chevron.png')} />
         </Pressable>
 
         <Modal
@@ -193,27 +219,30 @@ export class InstModalCheck extends React.Component {
           }}>
           <Button
             title="close"
-            onPress={() => this.setModalVisible(!modalVisible)}
+            onPress={() => {this.setModalVisible(!modalVisible)
+            console.log(this.state.selectedInst)}}
           />
           <View>
             <SelectMultiple
               items={list}
-              selectedItems={this.state.selectedItems}
+              selectedItems={this.state.selectedInst}
               onSelectionsChange={this.onSelectionsChange}
             />
           </View>
         </Modal>
-
-        {this.state.selectedItems.map((inst, index) => (
-          <Pressable
-            key={index}
-            onPress={() => {
-              this.state.selectedItems.splice(index, 1);
-              this.setState(this.state.selectedItems);
-            }}>
-            <Text>{inst.label}</Text>
-          </Pressable>
-        ))}
+        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          {this.state.selectedInst.map((inst, index) => (
+            <Pressable
+              style={styles.tag}
+              key={index}
+              onPress={() => {
+                this.state.selectedInst.splice(index, 1);
+                this.setState(this.state.selectedInst);
+              }}>
+              <Text style={fonts.textTag}>{inst.label}</Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
     );
   }
@@ -224,7 +253,7 @@ export class StyleModalCheck extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
-      selectedItems: [],
+      selectedStyle: [],
       style: {
         style: [],
       },
@@ -245,9 +274,9 @@ export class StyleModalCheck extends React.Component {
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
-  onSelectionsChange = selectedItems => {
+  onSelectionsChange = selectedStyle => {
     // selecteditem is array of { label, value }
-    this.setState({selectedItems});
+    this.setState({selectedStyle});
   };
   getStyle = async () => {
     const listDoc = await firestore().collection('list').doc('style').get();
@@ -260,9 +289,10 @@ export class StyleModalCheck extends React.Component {
     return (
       <View>
         <Pressable
-          style={{margin: 15, backgroundColor: 'blue'}}
+          style={styles.button}
           onPress={() => this.setModalVisible(true)}>
-          <Text style={{margin: 8, color: 'white'}}>Ajoute un style</Text>
+          <Text style={fonts.textButton}>Ajoute un style</Text>
+          <Image source={require('../assets/chevron.png')} />
         </Pressable>
 
         <Modal
@@ -274,25 +304,29 @@ export class StyleModalCheck extends React.Component {
           }}>
           <Button
             title="close"
-            onPress={() => this.setModalVisible(!modalVisible)}
+            onPress={() => {this.setModalVisible(!modalVisible)}
+          }
           />
           <View>
             <SelectMultiple
               items={list}
-              selectedItems={this.state.selectedItems}
+              selectedItems={this.state.selectedStyle}
               onSelectionsChange={this.onSelectionsChange}></SelectMultiple>
           </View>
         </Modal>
-        {this.state.selectedItems.map((style, index) => (
-          <Pressable
-            key={index}
-            onPress={() => {
-              this.state.selectedItems.splice(index, 1);
-              this.setState(this.state.selectedItems);
-            }}>
-            <Text>{style.label}</Text>
-          </Pressable>
-        ))}
+        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          {this.state.selectedStyle.map((style, index) => (
+            <Pressable
+              key={index}
+              style={styles.tag}
+              onPress={() => {
+                this.state.selectedStyle.splice(index, 1);
+                this.setState(this.state.selectedStyle);
+              }}>
+              <Text style={fonts.textTag}>{style.label}</Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
     );
   }

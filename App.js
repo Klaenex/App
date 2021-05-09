@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, HeaderTitle} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Text, StatusBar} from 'react-native';
-import {UserInfoModal} from './components/modal'
+import {View, Text, StatusBar,Image} from 'react-native';
+import {UserInfoModal} from './components/modal';
+import styles from './styles/style'
 import {
   SignIn,
   CreateAccount,
@@ -21,14 +22,26 @@ const HomeStack = createStackNavigator();
 const UserStack = createStackNavigator();
 const SearchStack = createStackNavigator();
 
+function Logo() {
+  return (
+    
+    <Image
+      style={styles.logo}
+      source={require('./assets/logo.png')}
+    />
+    
+    
+  );
+}
+
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
-    <HomeStack.Screen name="Home" component={Home} />
+    <HomeStack.Screen name="Home" component={Home} options={{headerTitle: props => <Logo />}} />
   </HomeStack.Navigator>
 );
 const SearchStackScreen = () => (
   <SearchStack.Navigator>
-    <SearchStack.Screen name="Search" component={Search} />
+    <SearchStack.Screen name="Search" component={Search} options={{headerTitle: props => <Logo />}}/>
     <SearchStack.Screen
       name="Message"
       component={Message}
@@ -40,7 +53,7 @@ const SearchStackScreen = () => (
 );
 const UserStackScreen = () => (
   <UserStack.Navigator>
-    <UserStack.Screen name="User" component={User} />
+    <UserStack.Screen name="User" component={User} options={{headerTitle: props => <Logo />}}/>
   </UserStack.Navigator>
 );
 
@@ -77,15 +90,15 @@ export default () => {
         </AuthStack.Navigator>
       </NavigationContainer>
     );
-  } 
-    return (
-      <NavigationContainer>
-        <UserInfoModal/>
-        <Tabs.Navigator>
-          <Tabs.Screen name="Home" component={HomeStackScreen} />
-          <Tabs.Screen name="Search" component={SearchStackScreen} />
-          <Tabs.Screen name="User" component={UserStackScreen} />
-        </Tabs.Navigator>
-      </NavigationContainer>
-    );
+  }
+  return (
+    <NavigationContainer>
+      <UserInfoModal />
+      <Tabs.Navigator>
+        <Tabs.Screen name="Home" component={HomeStackScreen} />
+        <Tabs.Screen name="Search" component={SearchStackScreen} />
+        <Tabs.Screen name="User" component={UserStackScreen} />
+      </Tabs.Navigator>
+    </NavigationContainer>
+  );
 };

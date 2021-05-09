@@ -1,11 +1,15 @@
 import React from 'react';
-import {View, Text, Button, TextInput} from 'react-native';
+import {View, Text, Button, TextInput,Image} from 'react-native';
 import Auth from './signIn';
 import Log from './log';
 import UserProfile from './userProfile'
 import SearchUsers from './searchUsers.js'
 import auth from '@react-native-firebase/auth';
-const ScreenContainer = ({children}) => <View>{children}</View>;
+import styles from '../styles/style';
+
+
+
+const ScreenContainer = ({children}) => <View style={styles.background}>{children}</View>;
 
 export const SignIn = ({navigation}) => {
   return (
@@ -31,7 +35,7 @@ const SignOut = () =>
   auth()
     .signOut()
     .then(() => console.log('User signed out!'));
-
+    
 export const Home = () => {
   return (
     <ScreenContainer>

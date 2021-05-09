@@ -1,9 +1,13 @@
 import React from 'react';
 import firebase from '@react-native-firebase/app';
-import {View, Text, Image, Button} from 'react-native';
+import {View, Text, Image, Button,Pressable,ScrollView} from 'react-native';
 import {InstModalCheck, StyleModalCheck} from './modal';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import styles from '../styles/style'
+import fonts from '../styles/font'
+import font from '../styles/font';
+import style from '../styles/style';
 
 export default class UserProfile extends React.Component {
   constructor(props) {
@@ -34,22 +38,23 @@ export default class UserProfile extends React.Component {
   };
   render() {
     return (
-      <View>
-        <Text>{this.state.text.pseudo}</Text> 
-        <Image />
-        <Text>Description</Text>
-         <Text>{this.state.text.desc}</Text> 
-        <Button
-          title="test"
-          onPress={async () => {
-            const uID = auth().currentUser.uid;
-            console.log(await firestore().collection('users').doc(uID).get());
-          }}
-        />
+      <ScrollView>
+        <Image style={styles.profilePhoto} source={require('../assets/photo.jpg')}/>
+        <Text style={fonts.textPseudo} >{this.state.text.pseudo}</Text>
+        <Text style={fonts.textTitle}>Description</Text>
+        <Text style={fonts.textDesc}>{this.state.text.desc}</Text>
+        <View style={styles.separator}></View>
+        <Text style={fonts.textTitle}>Instrument</Text>
         <InstModalCheck />
+        <View style={styles.separator}></View>
+        <Text style={fonts.textTitle}>Style</Text>
         <StyleModalCheck />
-        <Text>Mon groupe</Text>
-      </View>
+        <View style={styles.separator}></View>
+        <Text style={fonts.textTitle}>Mon groupe</Text>
+        <Pressable style={styles.button}>
+          <Text style={fonts.textButton}>Ajoute un groupe</Text>
+        </Pressable>
+      </ScrollView>
     );
   }
 }
