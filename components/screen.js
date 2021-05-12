@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, Button, TextInput,Image} from 'react-native';
+import {View, Text, Button, TextInput,Image,Pressable} from 'react-native';
 import Auth from './signIn';
 import Log from './log';
 import UserProfile from './userProfile'
 import SearchUsers from './searchUsers.js'
 import auth from '@react-native-firebase/auth';
 import styles from '../styles/style';
-
+import fonts from '../styles/font'
 
 
 const ScreenContainer = ({children}) => <View style={styles.background}>{children}</View>;
@@ -15,10 +15,11 @@ export const SignIn = ({navigation}) => {
   return (
     <ScreenContainer>
       <Auth />
-      <Button
-        title="Créer un compte"
-        onPress={() => navigation.push('CreateAccount')}
-      />
+      <Pressable
+          style={styles.submitButton}
+          onPress={() => navigation.push('CreateAccount')}>
+          <Text style={fonts.textSubmitButton}>Crée un compte</Text>
+        </Pressable>
     </ScreenContainer>
   );
 };

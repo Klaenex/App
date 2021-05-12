@@ -16,9 +16,23 @@ export default StyleSheet.create({
     includeFontPadding: false,
     fontFamily:fontQuick[0]
   },
+  textSubmitButton:{
+    fontSize: size[0],
+    color: white,
+    textAlign: 'center',
+    includeFontPadding: false,
+    fontFamily:fontQuick[0],
+    padding:16
+  },
   textTitle: {
     fontSize: size[1],
-    fontFamily:fontMono[0]
+    fontFamily:fontMono[0],
+    marginBottom:8
+  },
+  textInput: {
+    fontSize: size[1],
+    fontFamily:fontQuick[0],
+    marginLeft:8
   },
   textPseudo:{
     fontFamily:fontMono[1],
@@ -33,6 +47,7 @@ export default StyleSheet.create({
     fontSize: size[0],
     marginHorizontal: 16,
     marginVertical: 4,
-    fontFamily:fontQuick[0]
+    fontFamily:fontQuick[0],
+    includeFontPadding:false,
   },
 });

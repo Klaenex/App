@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, TextInput, Button, Modal, Text} from 'react-native';
+import {View, TextInput, Button, Modal, Text,Pressable} from 'react-native';
 import {UserInfoModal} from './modal';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import styles from '../styles/style'
+import fonts from '../styles/font'
 
 //const usersCollection = firestore().collection('users');
 
@@ -78,10 +80,11 @@ export default class Log extends React.Component {
           underlineColorAndroid="transparent"
           value={this.state.mdp}
         />
-        <Button
-          title="Crée un compte"
-          onPress={() => createAccount(this.state.email, this.state.mdp)}
-        />
+        <Pressable
+          style={styles.submitButton}
+          onPress={() => createAccount(this.state.email, this.state.mdp)}>
+          <Text style={fonts.textSubmitButton}>Crée un compte</Text>
+        </Pressable>
       </View>
     );
   }

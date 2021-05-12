@@ -19,7 +19,7 @@ import styles from '../styles/style';
 import fonts from '../styles/font';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import style from '../styles/style';
+
 
 //FONCTION UPDATE DE LA PREMMIERE CONNECTION
 
@@ -88,16 +88,13 @@ export class UserInfoModal extends React.Component {
   setDesc(desc) {
     this.setState({desc});
   }
-  // setInst(inst) {
-  //   this.setState({inst});
-  // }
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
-  childStateCallback = (childState) => {
-    this.setState({
-      inst: childState,
-    });
+  childStateCallback = inst => {
+    console.log("childStateCallback::::");
+    console.log(inst);
+    this.setState({inst});
   };
   render() {
     const {modalVisible} = this.state;
@@ -105,7 +102,7 @@ export class UserInfoModal extends React.Component {
     if (currentUser.displayName == null) {
       return (
         <Modal
-          styles={{padding: 16}}
+          style={styles.modal}
           transparent={false}
           visible={modalVisible}
           onRequestClose={() => {
@@ -124,10 +121,14 @@ export class UserInfoModal extends React.Component {
           <TextInput
             placeholder="Décris toi briévement"
             multiline={true}
-           onChangeText={text => this.setDesc(text)}
+            onChangeText={text => this.setDesc(text)}
           />
           <InstModalCheck
-            toCallBack={(childState) => this.childStateCallback(childState)}
+             toCallBack={inst => {
+               console.log("test");
+               console.log(inst);
+               this.childStateCallback(inst)}
+             }
           />
           <StyleModalCheck />
           <Button
@@ -142,13 +143,13 @@ export class UserInfoModal extends React.Component {
               //   this.state.style,
               //   uID,
               // );
-              // this.setModalVisible(!modalVisible);
+              //this.setModalVisible(!modalVisible);
             }}
           />
         </Modal>
       );
     } else {
-      return <View></View>;
+      return null;
     }
   }
 }
@@ -175,31 +176,26 @@ export class InstModalCheck extends React.Component {
         });
       });
   }
-  setStateAndRunCallback = (val) => {
-    this.setState(val, () => {
-      this.props.toCallBack(this.state);
-    });
-  };
+
   setModalVisible = visible => {
     this.setState({modalVisible: visible});
   };
 
-    onSelectionsChange = selectedInst => {
-  // //   // selecteditem is array of { label, value }
-  this.setState({selectedInst})
-     this.setState((selectedInst) =>{
-        this.props.toCallBack(this.state.selectedInst);
-      });
-     
-    };
-  
+  onSelectionsChange = selectedInst => {
+    // selecteditem is array of { label, value }
+    // console.log("onSelectionsChange::::");
+    // console.log(selectedInst);
+    this.setState({selectedInst});
+    this.props.toCallBack(selectedInst);
+
+  };
+
   getInst = async () => {
     const listDoc = await firestore().collection('list').doc('inst').get();
   };
 
   render() {
     const {modalVisible} = this.state;
-
     const list = this.state.inst.inst;
     return (
       <View>
@@ -219,8 +215,10 @@ export class InstModalCheck extends React.Component {
           }}>
           <Button
             title="close"
-            onPress={() => {this.setModalVisible(!modalVisible)
-            console.log(this.state.selectedInst)}}
+            onPress={() => {
+               this.setModalVisible(!modalVisible);
+              console.log(this.state.selectedInst);
+            }}
           />
           <View>
             <SelectMultiple
@@ -238,6 +236,8 @@ export class InstModalCheck extends React.Component {
               onPress={() => {
                 this.state.selectedInst.splice(index, 1);
                 this.setState(this.state.selectedInst);
+                this.setState(this.props.selectedInst);
+                
               }}>
               <Text style={fonts.textTag}>{inst.label}</Text>
             </Pressable>
@@ -304,8 +304,9 @@ export class StyleModalCheck extends React.Component {
           }}>
           <Button
             title="close"
-            onPress={() => {this.setModalVisible(!modalVisible)}
-          }
+            onPress={() => {
+              this.setModalVisible(!modalVisible);
+            }}
           />
           <View>
             <SelectMultiple
@@ -331,3 +332,6 @@ export class StyleModalCheck extends React.Component {
     );
   }
 }
+
+
+
