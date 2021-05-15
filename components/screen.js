@@ -1,25 +1,27 @@
 import React from 'react';
-import {View, Text, Button, TextInput,Image,Pressable} from 'react-native';
+import {View, Text, Button, TextInput, Image, Pressable} from 'react-native';
 import Auth from './signIn';
 import Log from './log';
-import UserProfile from './userProfile'
-import SearchUsers from './searchUsers.js'
+import UserProfile from './userProfile';
+import SearchUsers from './searchUsers';
+import OtherUser from './otherUser';
 import auth from '@react-native-firebase/auth';
 import styles from '../styles/style';
-import fonts from '../styles/font'
+import fonts from '../styles/font';
 
-
-const ScreenContainer = ({children}) => <View style={styles.background}>{children}</View>;
+const ScreenContainer = ({children}) => (
+  <View style={styles.background}>{children}</View>
+);
 
 export const SignIn = ({navigation}) => {
   return (
     <ScreenContainer>
       <Auth />
       <Pressable
-          style={styles.submitButton}
-          onPress={() => navigation.push('CreateAccount')}>
-          <Text style={fonts.textSubmitButton}>Crée un compte</Text>
-        </Pressable>
+        style={styles.submitButton}
+        onPress={() => navigation.push('CreateAccount')}>
+        <Text style={fonts.textSubmitButton}>Crée un compte</Text>
+      </Pressable>
     </ScreenContainer>
   );
 };
@@ -36,7 +38,7 @@ const SignOut = () =>
   auth()
     .signOut()
     .then(() => console.log('User signed out!'));
-    
+
 export const Home = () => {
   return (
     <ScreenContainer>
@@ -45,17 +47,46 @@ export const Home = () => {
     </ScreenContainer>
   );
 };
-export const Search = ({navigation}) => {
-  return (
-    <ScreenContainer>
-      <SearchUsers/>
-      {/* <Button
-        title="Message"
-        onPress={() => navigation.push('Message', {name: 'Message'})}
-      /> */}
-    </ScreenContainer>
-  );
+
+// export const Search = ({navigation}) => {
+//   return (
+//     <ScreenContainer>
+//       <SearchUsers userView={navigation.push('UserView')} />
+//     </ScreenContainer>
+//   );
+// };
+
+export class Search extends React.Component {
+  render() {
+    console.log('Search::::')
+    console.log( this.props) 
+    return (
+      <ScreenContainer>
+        <SearchUsers userView={this.props.navigation} />
+      </ScreenContainer>
+    );
+  }
+}
+export class UserView extends React.Component {
+  
+  render() {
+    console.log('User::::')
+    console.log(this.props.route.params.userID)
+    return (
+      <ScreenContainer>
+        <OtherUser getUserID={this.props.route.params.userID} />
+      </ScreenContainer>
+    );
+  }
+  
 };
+// export const UserView = ({route, navigation}) => {
+//   return (
+//     <ScreenContainer>
+//       <OtherUser />
+//     </ScreenContainer>
+//   );
+// };
 
 export const User = () => {
   return (

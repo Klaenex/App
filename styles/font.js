@@ -40,7 +40,8 @@ export default StyleSheet.create({
   },
   textDesc: {
     fontSize: size[0],
-    fontFamily:fontQuick[0]
+    fontFamily:fontQuick[0],
+    includeFontPadding: false,
   },
   textTag: {
     color: dark,

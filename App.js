@@ -2,9 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, HeaderTitle} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Text, StatusBar,Image} from 'react-native';
-import {UserInfoModal} from './components/modal';
-import styles from './styles/style'
+import {View, Text, StatusBar, Image} from 'react-native';
+import styles from './styles/style';
 import {
   SignIn,
   CreateAccount,
@@ -13,6 +12,7 @@ import {
   User,
   Filter,
   Message,
+  UserView,
 } from './components/screen';
 import auth from '@react-native-firebase/auth';
 
@@ -23,25 +23,25 @@ const UserStack = createStackNavigator();
 const SearchStack = createStackNavigator();
 
 function Logo() {
-  return (
-    
-    <Image
-      style={styles.logo}
-      source={require('./assets/logo.png')}
-    />
-    
-    
-  );
+  return <Image style={styles.logo} source={require('./assets/logo.png')} />;
 }
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
-    <HomeStack.Screen name="Home" component={Home} options={{headerTitle: props => <Logo />}} />
+    <HomeStack.Screen
+      name="Home"
+      component={Home}
+      options={{headerTitle: props => <Logo />}}
+    />
   </HomeStack.Navigator>
 );
 const SearchStackScreen = () => (
   <SearchStack.Navigator>
-    <SearchStack.Screen name="Search" component={Search} options={{headerTitle: props => <Logo />}}/>
+    <SearchStack.Screen
+      name="Search"
+      component={Search}
+      options={{headerTitle: props => <Logo />}}
+    />
     <SearchStack.Screen
       name="Message"
       component={Message}
@@ -49,11 +49,22 @@ const SearchStackScreen = () => (
         title: route.params.name,
       })}
     />
+    <SearchStack.Screen
+      name="UserView"
+      component={UserView}
+        // options={({route}) => ({
+        // userID: route.params.name,
+        // })}
+    />
   </SearchStack.Navigator>
 );
 const UserStackScreen = () => (
   <UserStack.Navigator>
-    <UserStack.Screen name="User" component={User} options={{headerTitle: props => <Logo />}}/>
+    <UserStack.Screen
+      name="User"
+      component={User}
+      options={{headerTitle: props => <Logo />}}
+    />
   </UserStack.Navigator>
 );
 
@@ -93,7 +104,6 @@ export default () => {
   }
   return (
     <NavigationContainer>
-      <UserInfoModal />
       <Tabs.Navigator>
         <Tabs.Screen name="Home" component={HomeStackScreen} />
         <Tabs.Screen name="Search" component={SearchStackScreen} />

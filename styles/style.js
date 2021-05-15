@@ -59,7 +59,8 @@ export default StyleSheet.create({
     width: '100%',
     height: 1,
     backgroundColor: 'rgba(0,0,0,.1)',
-    marginVertical: 32,
+    marginTop: 32,
+    marginBottom: 16,
   },
   separatorSearch: {
     width: '100%',
@@ -67,34 +68,54 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,.1)',
     marginVertical: 16,
   },
-  textInput:{
-    borderRadius:30,
-    borderWidth:2,
-    borderColor:purple,
+  textInput: {
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: purple,
     marginVertical: 8,
-    paddingHorizontal:16,
-    fontSize:16,
-    fontFamily:'Quicksand-regular',
-    
+    paddingHorizontal: 16,
+    fontSize: 16,
+    fontFamily: 'Quicksand-regular',
   },
-  submitButton:{
-    alignSelf:'center',
-    backgroundColor:purple,
-    borderRadius:25,
-    width:165,
-    marginVertical: 8
-},fixedButton:{
-    position:'absolute',
-    bottom:0,
-    alignSelf:'center',
-    backgroundColor:purple,
-    borderRadius:25,
-    width:165,
-    marginVertical: 8
-},
-modal:{
-    marginTop:32,
+  submitButton: {
+    alignSelf: 'center',
+    backgroundColor: purple,
+    borderRadius: 25,
+    width: 165,
+    marginVertical: 8,
+  },
+  fixedButton: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    backgroundColor: purple,
+    borderRadius: 25,
+    width: 165,
+    marginVertical: 8,
+    zIndex: 1
+  },
+  modalCenter: {
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: 64,
+    backgroundColor: 'rgba(0,0,0,.7)',
+  },
+  modalView: {
+    backgroundColor:'white',
+    borderRadius: 20,
+    padding: 8,
     marginHorizontal: 8,
-    
-}
+    alignItems: "flex-start",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  descWrapper: {
+    flexDirection: 'row',
+  },
 });

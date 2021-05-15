@@ -1,40 +1,39 @@
 import React, {useState, useEffect} from 'react';
-import {View, TextInput, Button, Modal, Text,Pressable} from 'react-native';
-import {UserInfoModal} from './modal';
+import {View, TextInput, Button, Modal, Text, Pressable} from 'react-native';
+
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import styles from '../styles/style'
-import fonts from '../styles/font'
+import styles from '../styles/style';
+import fonts from '../styles/font';
 
 //const usersCollection = firestore().collection('users');
 
-const addUsers = (email,uid) => {
+const addUsers = (email, uid, pseudo) => {
   firestore()
-  .collection('users')
-  .doc(uid)
-  .set({
-    id:uid,
-    pseudo: '',
-    email: email,
-    desc:'',
-    inst:[],
-    style:[],
-    band:false
-  })
-  .then(() => {
-    console.log('User added!');
-  });
+    .collection('users')
+    .doc(uid)
+    .set({
+      id: uid,
+      pseudo: pseudo,
+      email: email,
+      desc: '',
+      inst: [],
+      style: [],
+      band: false,
+    })
+    .then(() => {
+      console.log('User added!');
+      auth().currentUser.updateProfile({displayName: pseudo});
+    });
 };
 
-
-const createAccount = (email, mdp) =>
+const createAccount = (email, mdp,pseudo) =>
   auth()
     .createUserWithEmailAndPassword(email, mdp)
     .then(() => {
-     
-      let uId=auth().currentUser.uid
-      console.log(uId)
-      addUsers(email,uId);
+      let uId = auth().currentUser.uid;
+      console.log(uId);
+      addUsers(email, uId, pseudo);
     })
 
     .catch(error => {
@@ -49,17 +48,21 @@ const createAccount = (email, mdp) =>
     });
 
 export default class Log extends React.Component {
-  
   constructor(props) {
-    super(props);   
+    super(props);
     this.state = {
+      pseudo: 'pseudo',
       email: 'admin@admin.com',
       mdp: 'admin1',
     };
   }
+  setPseudo(pseudo) {
+    this.setState({pseudo});
+  }
   setEmail(email) {
     this.setState({email});
   }
+
   setMdp(mdp) {
     this.setState({mdp});
   }
@@ -67,6 +70,13 @@ export default class Log extends React.Component {
     return (
       <View>
         <TextInput
+          style={styles.textInput}
+          onChangeText={text => this.setPseudo(text)}
+          underlineColorAndroid="transparent"
+          value={this.state.pseudo}
+        />
+        <TextInput
+          style={styles.textInput}
           textContentType="emailAddress"
           keyboardType="email-address"
           onChangeText={text => this.setEmail(text)}
@@ -74,6 +84,7 @@ export default class Log extends React.Component {
           value={this.state.email}
         />
         <TextInput
+          style={styles.textInput}
           secureTextEntry={true}
           textContentType="password"
           onChangeText={text => this.setMdp(text)}
@@ -82,7 +93,7 @@ export default class Log extends React.Component {
         />
         <Pressable
           style={styles.submitButton}
-          onPress={() => createAccount(this.state.email, this.state.mdp)}>
+          onPress={() => createAccount(this.state.email, this.state.mdp,this.state.pseudo)}>
           <Text style={fonts.textSubmitButton}>Crée un compte</Text>
         </Pressable>
       </View>
