@@ -16,8 +16,6 @@ import fonts from '../styles/font';
 import ModalSearch from './modalSearch';
 import style from '../styles/style';
 
-
-
 export default class SearchUsers extends React.Component {
   constructor(props) {
     super(props);
@@ -52,29 +50,52 @@ export default class SearchUsers extends React.Component {
   };
 
   render() {
-   // const {navigate}=this.props.navigation
+    // const {navigate}=this.props.navigation
+
   
-   console.log(this.props.params)
     const {modalVisible} = this.state;
     let userArray = this.state.users;
     let search = this.state.search;
     let filterInst = this.state.inst;
     let filterStyle = this.state.inst;
-    
-    function userFiltered(userArray,props) {
+
+    function userFiltered(userArray, props) {
       if (filterInst[0] == null || filterInst[0] == null) {
         let user = userArray
           .filter(user => user.pseudo.includes(search))
           .map((filteredUser, index) => (
             <View key={index}>
-              <Pressable
-                onPress={()=>{
-                  props.userView.setParams({userID:filteredUser.id})
-                  props.userView.navigate('UserView',{userID:filteredUser.id})}}>
-                
-                <Text style={fonts.textDesc}>{filteredUser.pseudo}</Text>
-                <View style={styles.separatorSearch}></View>
-              </Pressable>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Pressable
+                  onPress={() => {
+                    props.getParams.setParams({
+                      userID: filteredUser.id,
+                      name: filteredUser.pseudo,
+                    });
+                    props.getParams.navigate('UserView', {
+                      userID: filteredUser.id,
+                      name: filteredUser.pseudo,
+                    });
+                  }}>
+                  <Text style={fonts.textDesc}>{filteredUser.pseudo}</Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={() => {
+                    props.getParams.setParams({
+                      userID: filteredUser.id,
+                      name: filteredUser.pseudo,
+                    });
+                    props.getParams.navigate('Message', {
+                      userID: filteredUser.id,
+                      name: filteredUser.pseudo,
+                    });
+                  }}>
+                  <Image source={require('../assets/message.png')} />
+                </Pressable>
+              </View>
+              <View style={styles.separatorSearch} />
             </View>
           ));
         return user;
@@ -96,7 +117,7 @@ export default class SearchUsers extends React.Component {
             onChangeText={text => this.setSearch(text)}
           />
           <View style={styles.separatorSearch}></View>
-          {userFiltered(userArray,this.props)}
+          {userFiltered(userArray, this.props)}
         </ScrollView>
         <Pressable
           style={styles.fixedButton}

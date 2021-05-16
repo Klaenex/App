@@ -4,6 +4,7 @@ import Auth from './signIn';
 import Log from './log';
 import UserProfile from './userProfile';
 import SearchUsers from './searchUsers';
+import MessageView from './messageView';
 import OtherUser from './otherUser';
 import auth from '@react-native-firebase/auth';
 import styles from '../styles/style';
@@ -44,6 +45,7 @@ export const Home = () => {
     <ScreenContainer>
       <Text>Home</Text>
       <Button title="disconect" onPress={() => SignOut()} />
+      <Button title="nav" onPress={() => navigate.push('Message')} />
     </ScreenContainer>
   );
 };
@@ -58,36 +60,32 @@ export const Home = () => {
 
 export class Search extends React.Component {
   render() {
-    console.log('Search::::')
-    console.log( this.props) 
     return (
       <ScreenContainer>
-        <SearchUsers userView={this.props.navigation} />
+        <SearchUsers getParams={this.props.navigation} />
       </ScreenContainer>
     );
   }
 }
 export class UserView extends React.Component {
-  
   render() {
-    console.log('User::::')
-    console.log(this.props.route.params.userID)
     return (
       <ScreenContainer>
         <OtherUser getUserID={this.props.route.params.userID} />
       </ScreenContainer>
     );
   }
-  
-};
-// export const UserView = ({route, navigation}) => {
-//   return (
-//     <ScreenContainer>
-//       <OtherUser />
-//     </ScreenContainer>
-//   );
-// };
+}
 
+export class Message extends React.Component {
+  render() {
+    return (
+      <ScreenContainer>
+        <MessageView getParams={this.props.route.params.userID}/>
+      </ScreenContainer>
+    );
+  }
+}
 export const User = () => {
   return (
     <ScreenContainer>
@@ -104,10 +102,10 @@ export const Filter = () => {
   );
 };
 
-export const Message = ({route}) => {
-  return (
-    <ScreenContainer>
-      <Text>Messages</Text>
-    </ScreenContainer>
-  );
-};
+// export const Message = ({route}) => {
+//   return (
+//     <ScreenContainer>
+//       <Text>Messages</Text>
+//     </ScreenContainer>
+//   );
+// };

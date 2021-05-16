@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, HeaderTitle} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Text, StatusBar, Image} from 'react-native';
+import {View, Text, StatusBar, Image,Pressable} from 'react-native';
 import styles from './styles/style';
 import {
   SignIn,
@@ -13,6 +13,7 @@ import {
   Filter,
   Message,
   UserView,
+
 } from './components/screen';
 import auth from '@react-native-firebase/auth';
 
@@ -22,16 +23,20 @@ const HomeStack = createStackNavigator();
 const UserStack = createStackNavigator();
 const SearchStack = createStackNavigator();
 
+
 function Logo() {
   return <Image style={styles.logo} source={require('./assets/logo.png')} />;
 }
+
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
     <HomeStack.Screen
       name="Home"
       component={Home}
-      options={{headerTitle: props => <Logo />}}
+      options={{
+        headerTitle: props => <Logo />
+      }}
     />
   </HomeStack.Navigator>
 );
@@ -46,15 +51,15 @@ const SearchStackScreen = () => (
       name="Message"
       component={Message}
       options={({route}) => ({
-        title: route.params.name,
+        name: route.params.name,
       })}
     />
     <SearchStack.Screen
       name="UserView"
       component={UserView}
-        // options={({route}) => ({
-        // userID: route.params.name,
-        // })}
+      // options={({route}) => ({
+      // name:route.params.name,
+      // })}
     />
   </SearchStack.Navigator>
 );
