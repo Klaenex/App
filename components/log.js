@@ -5,7 +5,7 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styles from '../styles/style';
 import fonts from '../styles/font';
-
+import style from '../styles/card'
 //const usersCollection = firestore().collection('users');
 
 const addUsers = (email, uid, pseudo) => {
@@ -68,7 +68,7 @@ export default class Log extends React.Component {
   }
   render() {
     return (
-      <View>
+      <View style={[style.card,{marginTop:64}]}>
         <TextInput
           style={styles.textInput}
           onChangeText={text => this.setPseudo(text)}

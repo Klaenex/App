@@ -3,6 +3,7 @@ import {TextInput, View, Button, Pressable, Text} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import styles from '../styles/style';
 import fonts from '../styles/font';
+import style from '../styles/card';
 const logIn = (email, mdp) =>
   auth()
     .signInWithEmailAndPassword(email, mdp)
@@ -31,31 +32,32 @@ export default class Auth extends React.Component {
   }
   render() {
     return (
-      <View>
-        <TextInput
-          style={styles.textInput}
-          autoComplete="email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
-          onChangeText={text => this.setEmail(text)}
-          underlineColorAndroid="transparent"
-          value={this.state.email}
-        />
-        <TextInput
-          style={styles.textInput}
-          autoComplete="password"
-          secureTextEntry={true}
-          textContentType="password"
-          onChangeText={text => this.setMdp(text)}
-          underlineColorAndroid="transparent"
-          value={this.state.mdp}
-        />
-        <Pressable
-          style={styles.submitButton}
-          onPress={() => logIn(this.state.email, this.state.mdp)}>
-          <Text style={fonts.textSubmitButton}>S'identifier</Text>
-        </Pressable>
-        
+      <View style={{marginVertical:64}}>
+        <View style={style.card}>
+          <TextInput
+            style={styles.textInput}
+            autoComplete="email"
+            textContentType="emailAddress"
+            keyboardType="email-address"
+            onChangeText={text => this.setEmail(text)}
+            underlineColorAndroid="transparent"
+            value={this.state.email}
+          />
+          <TextInput
+            style={styles.textInput}
+            autoComplete="password"
+            secureTextEntry={true}
+            textContentType="password"
+            onChangeText={text => this.setMdp(text)}
+            underlineColorAndroid="transparent"
+            value={this.state.mdp}
+          />
+          <Pressable
+            style={styles.submitButton}
+            onPress={() => logIn(this.state.email, this.state.mdp)}>
+            <Text style={fonts.textSubmitButton}>S'identifier</Text>
+          </Pressable>
+        </View>
       </View>
     );
   }

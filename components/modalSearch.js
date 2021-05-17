@@ -5,6 +5,7 @@ import fonts from '../styles/font';
 import SelectMultiple from 'react-native-select-multiple';
 import firestore from '@react-native-firebase/firestore';
 import style from '../styles/style';
+import card from '../styles/card';
 
 export default class ModalSearch extends React.Component {
   constructor(props) {
@@ -60,48 +61,51 @@ export default class ModalSearch extends React.Component {
     return (
       <View>
         {/* <Text style={[fonts.textTitle,{alignSelf:'flex-start'}]}>Instrument</Text> */}
-        <Pressable
-          style={styles.button}
-          onPress={() => this.setModalVisibleInst(!modalVisibleInst)}>
-          <Text style={fonts.textButton}>Par instrument</Text>
-          <Image source={require('../assets/chevron.png')} />
-        </Pressable>
-        <Modal
-          animationType="fade"
-          transparent={false}
-          visible={modalVisibleInst}
-          onRequestClose={() => {
-            this.setModalVisibleInst(!modalVisibleInst);
-          }}>
-          <Button
-            title="close"
-            onPress={() => {
+        <View>
+          <Pressable
+            style={styles.button}
+            onPress={() => this.setModalVisibleInst(!modalVisibleInst)}>
+            <Text style={fonts.textButton}>Par instrument</Text>
+            <Image source={require('../assets/chevron.png')} />
+          </Pressable>
+          <Modal
+            animationType="fade"
+            transparent={false}
+            visible={modalVisibleInst}
+            onRequestClose={() => {
               this.setModalVisibleInst(!modalVisibleInst);
-            }}
-          />
-          <View>
-            <SelectMultiple
-              items={listInst}
-              selectedItems={this.state.selectedInst}
-              onSelectionsChange={this.onSelectionsChangeInst}
-            />
-          </View>
-        </Modal>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          {this.state.selectedInst.map((style, index) => (
-            <Pressable
-              key={index}
-              style={styles.tag}
+            }}>
+            <Button
+              title="close"
               onPress={() => {
-                this.state.selectedInst.splice(index, 1);
-                this.setState(this.state.selectedInst);
-              }}>
-              <Text style={fonts.textTag}>{style.label}</Text>
-            </Pressable>
-          ))}
+                this.setModalVisibleInst(!modalVisibleInst);
+              }}
+            />
+            <View>
+              <SelectMultiple
+                items={listInst}
+                selectedItems={this.state.selectedInst}
+                onSelectionsChange={this.onSelectionsChangeInst}
+              />
+            </View>
+          </Modal>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {this.state.selectedInst.map((style, index) => (
+              <Pressable
+                key={index}
+                style={styles.tag}
+                onPress={() => {
+                  this.state.selectedInst.splice(index, 1);
+                  this.setState(this.state.selectedInst);
+                }}>
+                <Text style={fonts.textTag}>{style.label}</Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
-        <View style={styles.separator}></View>
+
         {/* <Text style={[fonts.textTitle,{alignSelf:'flex-start'}]}>Style</Text> */}
+<View >
         <Pressable
           style={[styles.button, {alignSelf: 'flex-start'}]}
           onPress={() => this.setModalVisibleStyle(!modalVisibleStyle)}>
@@ -141,9 +145,10 @@ export default class ModalSearch extends React.Component {
               <Text style={fonts.textTag}>{style.label}</Text>
             </Pressable>
           ))}
-          
+        </View>
         </View>
       </View>
+
     );
   }
 }

@@ -7,6 +7,7 @@ const size = [16, 22.62, 31.99, 45.23];
 const weight = ['400', '600', '800'];
 const fontMono=['SpaceMono-Regular','SpaceMono-Bold']
 const fontQuick=['Quicksand-Regular','Quicksand-Medium']
+const nunito='Nunito-Bold'
 
 export default StyleSheet.create({
   textButton: {
@@ -26,7 +27,7 @@ export default StyleSheet.create({
   },
   textTitle: {
     fontSize: size[1],
-    fontFamily:fontMono[0],
+    fontFamily:nunito,
     marginBottom:8
   },
   textInput: {
@@ -35,7 +36,7 @@ export default StyleSheet.create({
     marginLeft:8
   },
   textPseudo:{
-    fontFamily:fontMono[1],
+    fontFamily:nunito,
     fontSize:size[1]
   },
   textDesc: {

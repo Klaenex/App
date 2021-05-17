@@ -6,6 +6,7 @@ import UserProfile from './userProfile';
 import SearchUsers from './searchUsers';
 import MessageView from './messageView';
 import OtherUser from './otherUser';
+import Feed from './feed'
 import auth from '@react-native-firebase/auth';
 import styles from '../styles/style';
 import fonts from '../styles/font';
@@ -43,9 +44,7 @@ const SignOut = () =>
 export const Home = () => {
   return (
     <ScreenContainer>
-      <Text>Home</Text>
-      <Button title="disconect" onPress={() => SignOut()} />
-      <Button title="nav" onPress={() => navigate.push('Message')} />
+      <Feed/>
     </ScreenContainer>
   );
 };

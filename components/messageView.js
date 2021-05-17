@@ -31,7 +31,9 @@ const sendMessage = (roomID, currentUID, toUID, message) => {
       message: message,
       times: firestore.FieldValue.serverTimestamp(),
     })
-    .then(() => {});
+    .then(() => {
+      this.setState({messageSend:''})
+    });
 };
 
 export default class MessageView extends Component {
@@ -52,7 +54,7 @@ export default class MessageView extends Component {
       .onSnapshot(docs => {
         let getMessages = [];
         docs.forEach(doc => {
-          getMessages.push(doc.data().message);
+          getMessages.push(doc.data());
         });
         this.setState({getMessages});
       });
@@ -70,14 +72,31 @@ export default class MessageView extends Component {
     return (
       <View style={styles.wrapper}>
         <ScrollView style={styles.messageView}>
-          {messageArray.map((chat, index) => (
+          {/* {messageArray.map((chat, index) => (
             <View key={index}>
-              <Text key={index}> {chat}</Text>
+              <Text key={index}> {chat.message}</Text>
             </View>
-          ))}
+          ))} */}
+          {messageArray.map((chat, index) => {
+            if (currentUID == chat.sender) {
+              return (
+                <View key={index} style={[styles.myMessage]}>
+                  <Text style={styles.message}>{chat.message}</Text>
+                </View>
+              );
+            }
+            else{
+              return (
+                <View key={index} style={{alignItems:'flex-start'}}>
+                  <Text style={styles.message}>{chat.message}</Text>
+                </View>
+              );
+            }
+          })}
         </ScrollView>
         <View style={styles.inputWrapper}>
           <TextInput
+          ref={input => { this.textInput = input }}
             style={styles.input}
             onChangeText={text => this.setMessage(text)}
             underlineColorAndroid="transparent"
@@ -91,7 +110,8 @@ export default class MessageView extends Component {
                 currentUID,
                 toUID,
                 messageSend,
-              );
+              )
+              this.textInput.clear()
             }}>
             <Image source={require('../assets/sendMessage.png')} />
           </Pressable>
