@@ -69,8 +69,7 @@ export class InstModalCheck extends React.Component {
     this.setState({modalVisible: visible});
   };
 
-  onSelectionsChange = selectedInst => {
-     
+  onSelectionsChange = selectedInst => { 
     this.setState({selectedInst});
   };
 

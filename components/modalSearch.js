@@ -54,13 +54,11 @@ export default class ModalSearch extends React.Component {
   };
   render() {
     const listInst = this.state.inst;
-
     const listStyle = this.state.style;
     const {modalVisibleInst} = this.state;
     const {modalVisibleStyle} = this.state;
     return (
       <View>
-        {/* <Text style={[fonts.textTitle,{alignSelf:'flex-start'}]}>Instrument</Text> */}
         <View>
           <Pressable
             style={styles.button}
@@ -104,51 +102,50 @@ export default class ModalSearch extends React.Component {
           </View>
         </View>
 
-        {/* <Text style={[fonts.textTitle,{alignSelf:'flex-start'}]}>Style</Text> */}
-<View >
-        <Pressable
-          style={[styles.button, {alignSelf: 'flex-start'}]}
-          onPress={() => this.setModalVisibleStyle(!modalVisibleStyle)}>
-          <Text style={fonts.textButton}>Par styles</Text>
-          <Image source={require('../assets/chevron.png')} />
-        </Pressable>
-        <Modal
-          animationType="fade"
-          transparent={false}
-          visible={modalVisibleStyle}
-          onRequestClose={() => {
-            this.setModalVisibleStyle(!modalVisibleStyle);
-          }}>
-          <Button
-            title="close"
-            onPress={() => {
+        
+        <View>
+          <Pressable
+            style={[styles.button, {alignSelf: 'flex-start'}]}
+            onPress={() => this.setModalVisibleStyle(!modalVisibleStyle)}>
+            <Text style={fonts.textButton}>Par styles</Text>
+            <Image source={require('../assets/chevron.png')} />
+          </Pressable>
+          <Modal
+            animationType="fade"
+            transparent={false}
+            visible={modalVisibleStyle}
+            onRequestClose={() => {
               this.setModalVisibleStyle(!modalVisibleStyle);
-            }}
-          />
-          <View>
-            <SelectMultiple
-              items={listStyle}
-              selectedItems={this.state.selectedStyle}
-              onSelectionsChange={this.onSelectionsChangeStyle}
-            />
-          </View>
-        </Modal>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          {this.state.selectedStyle.map((style, index) => (
-            <Pressable
-              key={index}
-              style={styles.tag}
+            }}>
+            <Button
+              title="close"
               onPress={() => {
-                this.state.selectedStyle.splice(index, 1);
-                this.setState(this.state.selectedStyle);
-              }}>
-              <Text style={fonts.textTag}>{style.label}</Text>
-            </Pressable>
-          ))}
-        </View>
+                this.setModalVisibleStyle(!modalVisibleStyle);
+              }}
+            />
+            <View>
+              <SelectMultiple
+                items={listStyle}
+                selectedItems={this.state.selectedStyle}
+                onSelectionsChange={this.onSelectionsChangeStyle}
+              />
+            </View>
+          </Modal>
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {this.state.selectedStyle.map((style, index) => (
+              <Pressable
+                key={index}
+                style={styles.tag}
+                onPress={() => {
+                  this.state.selectedStyle.splice(index, 1);
+                  this.setState(this.state.selectedStyle);
+                }}>
+                <Text style={fonts.textTag}>{style.label}</Text>
+              </Pressable>
+            ))}
+          </View>
         </View>
       </View>
-
     );
   }
 }

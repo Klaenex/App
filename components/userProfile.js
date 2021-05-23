@@ -11,6 +11,8 @@ import {
   Keyboard,
 } from 'react-native';
 import {InstModalCheck, StyleModalCheck} from './modal';
+import ImagePicker from './imagePicker'
+import {launchImageLibrary} from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import styles from '../styles/style';
@@ -18,6 +20,7 @@ import fonts from '../styles/font';
 import font from '../styles/font';
 import style from '../styles/card';
 import btn from '../styles/btn'
+
 
 const updateDesc = (desc, uid) => {
   firestore()
@@ -28,6 +31,8 @@ const updateDesc = (desc, uid) => {
     })
     .then(() => {});
 };
+
+
 export default class UserProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -37,7 +42,9 @@ export default class UserProfile extends React.Component {
       inst: [],
       style: [],
       editable: false,
+      avatar: require('../assets/photo.jpg'),
     };
+    
     this.getText();
     const uID = auth().currentUser.uid;
     this.userData = firestore()
@@ -72,13 +79,19 @@ export default class UserProfile extends React.Component {
     const {editable} = this.state;
     const uID = auth().currentUser.uid;
     const desc = this.state.desc;
+
+
+
+    
     return (
       <ScrollView>
         <View style={style.card}>
-          <Image
-            style={styles.profilePhoto}
-            source={require('../assets/photo.jpg')}
-          />
+          
+          <View>
+         
+          <ImagePicker getAvatar={this.state.avatar}/>
+          </View>
+
           <Text style={fonts.textPseudo}>{this.state.pseudo}</Text>
           <Text style={fonts.textTitle}>Description</Text>
 

@@ -46,18 +46,25 @@ export default class OtherUser extends React.Component {
         <Text style={fonts.textDesc}>{this.state.desc}</Text>
         <View style={styles.separator} />
         <Text style={fonts.textTitle}>Instrument</Text>
+        <View style={{flexDirection:'row', flexWrap:'wrap'}}>
         {listInst.map((inst, index) => (
           <View key={index} style={styles.tag}>
             <Text style={fonts.textTag}>{inst.value}</Text>
           </View>
         ))}
+        </View>
         <View style={styles.separator} />
         <Text style={fonts.textTitle}>Style</Text>
+        <View style={{flexDirection:'row', flexWrap:'wrap'}}>
         {listStyle.map((style, index) => (
+         
+            
+          
           <View key={index} style={styles.tag}>
             <Text style={fonts.textTag}>{style.value}</Text>
           </View>
         ))}
+        </View>
       </ScrollView>
     );
   }
