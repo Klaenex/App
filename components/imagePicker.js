@@ -13,76 +13,62 @@ import auth from '@react-native-firebase/auth';
 
 export default function ImagePicker() {
   const [response, setResponse] = React.useState(null);
+  const [urlImg,setUrlImg]=React.useState(null)
   const UID = auth().currentUser.uid;
   const reference = storage().ref('users/' + UID + '/avatar');
-  const url = async () => {
-    await storage()
-      .ref('users/' + UID + '/avatar')
-      .getDownloadURL();
-     
+    // console.log(UID)
+    // console.log(urlImg)
+  const onFileChange = async (e) => {
+
+    setUrlImg( await storage().ref('users/' + UID+'/avatar').getDownloadURL())
+
   };
   
+ 
 
   const upload = async img => {
-    // path to existing file on filesystem
     const pathToFile = img;
-    // uploads file
     await reference.putFile(pathToFile);
   };
 
-  // console.log(img)
+   //console.log(setUrlImg)
 
-  let photo = '../assets/photo.jpg';
   let avatar = '';
-  function image() {
-    if(response != null){
-      console.log('response')
-      for (const key in response) {
-        if (Object.hasOwnProperty.call(response, key)) {
-          const el = response[key];
-          
-          const image = el.uri;
-          console.log(image)
-          upload(image);
-  
-          return <Image style={styles.profilePhoto} source={{uri:image}} />;
-        }
-      }
-    }
-    else{
-       if (url != null) {
-         console.log('url')
-         return <Image style={styles.profilePhoto} source={{uri: url}} />;
-       } else {
-        console.log('notset')
-        return <Image style={styles.profilePhoto} source={require(`${photo}`)} />;
-      }
-    }
-    
-  }
 
- function setImage(){
-      
+  function image(response,image) {
+    onFileChange()
     
+    if (response != null) {
+      //console.log('response:::');
+      let getUri = response.uri;
+      //console.log(getUri);
+      upload(getUri);
+      return (
+        <Image
+          style={{width: ' 100%', height: 400, borderRadius: 15}}
+          source={{uri: getUri}}
+        />
+      );
+    }
+    if (image != null) {
+      console.log('setUrl::::::')
+      console.log(urlImg)
+      return (
+        <Image
+          style={{width: ' 100%', height: 400, borderRadius: 15}}
+          source={{uri: urlImg}}
+        />
+      );
+    } else {
+      console.log('noPHOTO:::');
+      let photo = '../assets/photo.jpg';
+      return <Image source={require(`${photo}`)} />;
+    }
   }
-  
-  
-  // const updateAvatar = async (avatar, uid) => {
-  //   await firestore()
-  //     .collection('users')
-  //     .doc(uid)
-  //     .update({
-  //       avatar: avatar,
-  //     })
-  //     .then(() => {});
-  // };
 
   return (
     <View>
-      
-      {image()}
-      
-      
+      {image(response,setUrlImg)}
 
       <Pressable
         onPress={() => {
@@ -94,7 +80,7 @@ export default function ImagePicker() {
               maxWidth: 400,
             },
             response => {
-              setResponse({img: response});
+              setResponse(response);
             },
           );
         }}>
